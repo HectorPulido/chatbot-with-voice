@@ -1,15 +1,23 @@
-import pyttsx3
+"""
+source/classes/speech_to_text.py: Module to recognize speech from microphone.
+"""
+import speech_recognition as sr
 
 
-class SpeechModule:
-    def __init__(self, voice=0, volume=1, rate=125):
-        self.engine = pyttsx3.init()
-        self.engine.setProperty("rate", rate)
-        self.engine.setProperty("volume", volume)
+class VoiceRecognitionModule:
+    def __init__(self, language="es"):
+        self.language = language
+        self.recognizer = sr.Recognizer()
 
-        voices = self.engine.getProperty("voices")
-        self.engine.setProperty("voice", voices[voice].id)
-
-    def talk(self, text):
-        self.engine.say(text)
-        self.engine.runAndWait()
+    def recognize(self):
+        """
+        Function to recognize speech from microphone.
+        """
+        with sr.Microphone() as source:
+            print("Speak Anything : ")
+            audio = self.recognizer.listen(source)
+            try:
+                text = self.recognizer.recognize_whisper(audio, language=self.language)
+                return text
+            except Exception as exception:
+                return f"Exception occurred: {exception}"
